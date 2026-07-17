@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="warm" cx="22%" cy="10%" r="70%">
+      <stop offset="0%" stop-color="#E7DFCB" stop-opacity="0.7"/>
+      <stop offset="60%" stop-color="#F7F5EF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#F7F5EF"/>
+  <rect width="1200" height="630" fill="url(#warm)"/>
+  <!-- faint window mullions -->
+  <g stroke="#333B2F" stroke-opacity="0.08" stroke-width="1">
+    <line x1="300" y1="0" x2="300" y2="400"/>
+    <line x1="600" y1="0" x2="600" y2="400"/>
+    <line x1="900" y1="0" x2="900" y2="400"/>
+  </g>
+  <text x="600" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="96" fill="#333B2F">Mud <tspan fill="#5E7355" font-style="italic">&amp;</tspan> Brush</text>
+  <text x="600" y="370" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="26" letter-spacing="8" fill="#6E7466">COMING SOON</text>
+</svg>

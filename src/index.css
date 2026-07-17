@@ -1,0 +1,252 @@
+@import './fonts.css';
+
+/* ─── Tokens ────────────────────────────────────────────────────────────────
+   A clean near-white ground with a whisper of green, and sage green as the
+   single confident accent. Cool contour lines drift behind everything.       */
+:root {
+  --paper:    #FCFCFA;   /* near-white, faint green cast */
+  --paper-2:  #F3F5F0;   /* the barely-there wash behind the card */
+  --ink:      #2F3A2C;   /* deep foliage — body text */
+  --ink-soft: #6C7566;   /* muted sage-grey — secondary text */
+  --sage:     #5A7150;   /* the accent: studio green */
+  --sage-hi:  #43563B;   /* deeper green, for hover */
+  --line:     rgba(47, 58, 44, 0.12);
+
+  /* the drifting contour lines and their soft green haze */
+  --contour:     rgba(90, 113, 80, 0.16);
+  --haze:        rgba(90, 113, 80, 0.06);
+  --haze-edge:   rgba(90, 113, 80, 0);
+
+  --shadow: 0 1px 2px rgba(47,58,44,.04), 0 18px 50px -22px rgba(47,58,44,.20);
+
+  --measure: 30rem;
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:    #2A3225;   /* deep studio green, still soft */
+    --paper-2:  #313A2B;
+    --ink:      #F4F3EA;
+    --ink-soft: #C3CAB6;
+    --sage:     #BFD3B1;
+    --sage-hi:  #DAE7CF;
+    --line:     rgba(244, 243, 234, 0.16);
+    --contour:  rgba(191, 211, 177, 0.14);
+    --haze:     rgba(191, 211, 177, 0.05);
+    --haze-edge: rgba(42, 50, 37, 0);
+    --shadow: 0 1px 2px rgba(0,0,0,.18), 0 20px 50px -20px rgba(0,0,0,.4);
+  }
+}
+
+/* Explicit toggle wins over the OS media query in both directions. */
+:root[data-theme='light'] {
+  --paper: #FCFCFA; --paper-2: #F3F5F0;
+  --ink: #2F3A2C; --ink-soft: #6C7566; --sage: #5A7150; --sage-hi: #43563B;
+  --line: rgba(47,58,44,.12);
+  --contour: rgba(90,113,80,.16); --haze: rgba(90,113,80,.06); --haze-edge: rgba(90,113,80,0);
+  --shadow: 0 1px 2px rgba(47,58,44,.04), 0 18px 50px -22px rgba(47,58,44,.20);
+}
+:root[data-theme='dark'] {
+  --paper: #2A3225; --paper-2: #313A2B;
+  --ink: #F4F3EA; --ink-soft: #C3CAB6; --sage: #BFD3B1; --sage-hi: #DAE7CF;
+  --line: rgba(244,243,234,.16);
+  --contour: rgba(191,211,177,.14); --haze: rgba(191,211,177,.05); --haze-edge: rgba(42,50,37,0);
+  --shadow: 0 1px 2px rgba(0,0,0,.18), 0 20px 50px -20px rgba(0,0,0,.4);
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ─── Stage ─────────────────────────────────────────────────────────────── */
+.stage {
+  position: relative;
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding: clamp(1.5rem, 5vw, 4rem);
+}
+
+/* A soft green haze that drifts slowly, keeping the white ground from feeling
+   flat without adding weight. */
+.light {
+  position: absolute;
+  inset: -20% -10%;
+  z-index: -2;
+  background:
+    radial-gradient(55% 80% at 20% 12%, var(--haze), var(--haze-edge) 60%),
+    radial-gradient(50% 70% at 84% 92%, var(--haze), var(--haze-edge) 58%);
+  animation: drift 40s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translate3d(-2%, -2%, 0) scale(1.04); }
+  to   { transform: translate3d(3%, 3%, 0) scale(1.1); }
+}
+
+/* Background line motif: soft, widely-spaced topographic contours that breathe
+   slowly behind the content, masked to fade toward the edges. */
+.mullions {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: repeating-radial-gradient(
+    130% 90% at 50% -10%,
+    transparent 0 38px,
+    var(--contour) 38px 39px
+  );
+  opacity: .9;
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 42%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(120% 100% at 50% 42%, #000 55%, transparent 100%);
+  animation: breathe 30s ease-in-out infinite alternate;
+}
+@keyframes breathe {
+  from { transform: translateY(-1.5%) scale(1.02); }
+  to   { transform: translateY(1.5%) scale(1.06); }
+}
+
+/* ─── Card ──────────────────────────────────────────────────────────────── */
+.card {
+  max-width: var(--measure);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.1rem;
+}
+
+/* A quiet staggered entrance so the page settles in rather than snapping on. */
+.card > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rise .9s cubic-bezier(.2,.6,.25,1) forwards;
+}
+.card > .eyebrow  { animation-delay: .05s; }
+.card > .wordmark { animation-delay: .18s; }
+.card > .coming   { animation-delay: .34s; }
+.card > .tagline  { animation-delay: .48s; }
+.card > .contact  { animation-delay: .62s; }
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: .74rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--sage);
+  font-weight: 600;
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 340;
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 40, 'WONK' 0, 'opsz' 100;
+  font-size: clamp(2.9rem, 10vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.wordmark .amp {
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: 'SOFT' 80, 'WONK' 1, 'opsz' 100;
+  color: var(--sage);
+  padding: 0 .1em;
+}
+
+.coming {
+  margin: .5rem 0 .2rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: 'SOFT' 60, 'opsz' 60;
+  font-size: clamp(1.35rem, 4.5vw, 1.7rem);
+  letter-spacing: .02em;
+  color: var(--sage);
+}
+.coming::before,
+.coming::after {
+  content: '';
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  vertical-align: middle;
+  margin: 0 .85rem;
+  background: color-mix(in srgb, var(--sage) 40%, var(--line));
+}
+
+.tagline {
+  margin: 0;
+  max-width: min(26rem, 100%);
+  font-size: 1.06rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.contact {
+  display: inline-flex;
+  flex-direction: column;
+  gap: .25rem;
+  margin-top: .6rem;
+  padding: .85rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--paper) 60%, transparent);
+  backdrop-filter: blur(2px);
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-size: .82rem;
+  letter-spacing: .02em;
+  box-shadow: var(--shadow);
+  transition: border-color .3s ease, transform .3s ease, background .3s ease;
+}
+.contact .email {
+  font-size: 1rem;
+  color: var(--sage);
+  font-weight: 600;
+  letter-spacing: 0;
+  transition: color .3s ease;
+}
+.contact:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--sage) 45%, var(--line));
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+.contact:hover .email { color: var(--sage-hi); }
+.contact:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 3px;
+}
+
+.foot {
+  padding-top: 2rem;
+  font-family: var(--serif);
+  font-size: .8rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: .6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light, .mullions { animation: none; }
+  .card > * { opacity: 1; transform: none; animation: none; }
+}
