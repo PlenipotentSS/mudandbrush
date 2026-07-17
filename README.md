@@ -22,7 +22,7 @@ npm run preview  # serve the built dist/ locally
 
 ## Deployment
 
-Hosted on **GitHub Pages** at `mudandbrush.com` (see [`public/CNAME`](public/CNAME)).
+Hosted on **GitHub Pages** at **`www.mudandbrush.com`** (see [`public/CNAME`](public/CNAME)).
 
 Pushing to the **`production`** branch triggers
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds and
@@ -32,8 +32,17 @@ publishes to Pages. `main` is the working branch; promote a release with:
 git switch production && git merge main && git push
 ```
 
-One-time setup: in the repo's **Settings → Pages**, set **Source** to
-**GitHub Actions**, and point the `mudandbrush.com` DNS at GitHub Pages.
+### DNS
+
+- **`www`** → `CNAME` record pointing at `plenipotentss.github.io`.
+- **apex `mudandbrush.com`** → the four GitHub Pages `A` records
+  (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`)
+  and the matching `AAAA` records. With the custom domain set to the `www` host,
+  GitHub Pages automatically **redirects the apex to `www.mudandbrush.com`** —
+  no redirect code needed.
+
+One-time setup: in the repo's **Settings → Pages**, Source is **GitHub Actions**
+and the custom domain is `www.mudandbrush.com` with *Enforce HTTPS* on.
 
 ### Custom domain vs. project path
 
